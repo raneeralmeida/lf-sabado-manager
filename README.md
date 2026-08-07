@@ -1,1 +1,0 @@
-# lf-sabado-manager
