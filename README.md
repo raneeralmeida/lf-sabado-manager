@@ -1,3 +1,7 @@
+# ⚽ LF Sábado Manager | PWA de Gestão Esportiva
+
+👉 **[ACESSAR O APLICATIVO ONLINE CLICANDO AQUI](https://raneeralmeida.github.io/lf-sabado-manager/index.html)**
+
 Uma aplicação Web Progressiva (PWA) desenvolvida para automatizar, balancear e gerenciar partidas de futebol amador. O projeto substitui o tradicional "caderninho" por um sistema inteligente que equilibra as equipes através de algoritmos, gerencia o tempo de quadra e aplica as regras de permanência automaticamente.
 
 🚀 Principais Funcionalidades:
