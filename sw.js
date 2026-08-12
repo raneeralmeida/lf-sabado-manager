@@ -1,0 +1,55 @@
+const CACHE_NAME = 'lf-turma-sabado-v2';
+
+// Arquivos que o app precisa baixar na primeira vez para funcionar offline
+const urlsToCache = [
+    './',
+    './index.html',
+    './style.css',
+    './app.js',
+    './manifest.json',
+    './fotos/logo.png',
+    './audios/apito.mp3',
+    './audios/sorteio.mp3'
+];
+
+// Instalação do Service Worker e cache inicial
+self.addEventListener('install', event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                return cache.addAll(urlsToCache);
+            })
+    );
+});
+
+// Intercepta as requisições: tenta pegar do cache, se não tiver, pega da rede e já salva no cache
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        caches.match(event.request)
+            .then(response => {
+                if (response) {
+                    return response; // Achou no cache, retorna direto (Offline)
+                }
+                
+                // Se não achou (ex: link do Tailwind, FontAwesome ou foto de jogador), baixa da net
+                return fetch(event.request).then(fetchResponse => {
+                    // Impede o cache de requisições que deram erro ou são de extensões
+                    if(!fetchResponse || fetchResponse.status !== 200 || fetchResponse.type !== 'basic') {
+                        return fetchResponse;
+                    }
+
+                    // Clona a resposta para salvar no cache e entregar para o app
+                    let responseToCache = fetchResponse.clone();
+                    caches.open(CACHE_NAME)
+                        .then(cache => {
+                            // Salva a nova requisição dinamicamente para a próxima vez
+                            cache.put(event.request, responseToCache);
+                        });
+
+                    return fetchResponse;
+                });
+            }).catch(() => {
+                // Caso falhe tudo e esteja sem internet, ele simplesmente ignora para não travar o app
+            })
+    );
+});
